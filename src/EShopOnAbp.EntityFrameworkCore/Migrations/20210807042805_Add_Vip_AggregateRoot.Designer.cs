@@ -4,15 +4,17 @@ using EShopOnAbp.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Volo.Abp.EntityFrameworkCore;
 
 namespace EShopOnAbp.Migrations
 {
     [DbContext(typeof(EShopOnAbpDbContext))]
-    partial class EShopOnAbpDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210807042805_Add_Vip_AggregateRoot")]
+    partial class Add_Vip_AggregateRoot
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
