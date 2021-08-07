@@ -6,8 +6,7 @@ using Volo.Abp.Domain.Entities;
 namespace EShopOnAbp.Vips
 {
     public class Vip : AggregateRoot<string>
-    {      
-
+    {
         public string CustomerId { get; private set; }
         public int Score { get; private set; }
 
@@ -32,6 +31,7 @@ namespace EShopOnAbp.Vips
         {
             ScoreRecords = new List<VipScoreRecord>();
         }
+
         public Vip(string vipId, string customerId)
         {
             Id = vipId;
@@ -42,6 +42,7 @@ namespace EShopOnAbp.Vips
         // 增加积分
         public void AddScore(int score)
         {
+            if (score <= 0) throw new InvalidScoreException(score);
             var needAddedScore = Level switch
             {
                 VipLevel.L1 or VipLevel.L2 => score * 2,
@@ -55,6 +56,8 @@ namespace EShopOnAbp.Vips
         // 扣减积分
         public bool ReduceScore(int score)
         {
+            if (score <= 0) throw new InvalidScoreException(score);
+
             var isMatched = TryMatchRecord(score);
             if (isMatched)
                 AddRecord(VipScoreRecordTypeEnum.Reduce, -score);
@@ -85,6 +88,8 @@ namespace EShopOnAbp.Vips
         // 积分兑换
         public bool ExchangeScore(int score)
         {
+            if (score <= 0) throw new InvalidScoreException(score);
+
             var isMatched = TryMatchRecord(score);
             if (isMatched)
                 AddRecord(VipScoreRecordTypeEnum.Exchange, -score);
