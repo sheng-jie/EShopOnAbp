@@ -36,6 +36,9 @@ namespace EShopOnAbp.Migrations
                 {
                     table.PrimaryKey("PK_Vips", x => x.Id);
                 });
+            
+            //Add foreigne key for vip
+            migrationBuilder.AddForeignKey("FK_Vips_Customers_CustomerId","Vips", "CustomerId", "Customers",principalColumn:"Id");
 
             migrationBuilder.CreateTable(
                 name: "VipScoreRecords",
