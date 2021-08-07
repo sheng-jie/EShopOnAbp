@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 using Volo.Abp.Domain.Entities;
 
 namespace EShopOnAbp.Customers
@@ -19,19 +20,18 @@ namespace EShopOnAbp.Customers
             Used,
             Expired
         }
-
-
+        
         public string VipId { get; private set; }
 
-        public RecordTypeEnum RecordType { get; }
+        public RecordTypeEnum RecordType { get; private set; }
 
         public RecordStatusEnum RecordStatus { get; private set; }
-        public int Before { get; }
-        public int Changed { get; }
-        public int After { get; }
+        public int Before { get; private set; }
+        public int Changed { get; private set; }
+        public int After { get; private set; }
 
         public int Left { get; set; }
-        public DateTime RecordDate { get; }
+        public DateTime RecordDate { get; private set; }
 
         public DateTime LastUpdateDate { get; private set; }
 

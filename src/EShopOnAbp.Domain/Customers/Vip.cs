@@ -1,11 +1,25 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using EShopOnAbp.Customers.Events;
 using Volo.Abp.Domain.Entities;
 
 namespace EShopOnAbp.Customers
 {
-    public class Vip : AggregateRoot
+    
+    public class TestVip:AggregateRoot
+    {
+        public string Name { get; set; }
+        public string VipId { get; set; }
+
+        public string UserId { get; set; }
+        public override object[] GetKeys()
+        {
+            return new[] {VipId, UserId};
+        }
+    }
+
+    public class Vip : AggregateRoot<string>
     {
         public enum VipLevel
         {
@@ -16,14 +30,7 @@ namespace EShopOnAbp.Customers
             L4
         }
 
-        public string VipId { get; set; }
-        public string CustomerId { get; }
-
-        public override object[] GetKeys()
-        {
-            return new[] {VipId, CustomerId};
-        }
-
+        public string CustomerId { get; private set; }
         public int Score { get; private set; }
 
         public VipLevel Level
@@ -47,9 +54,9 @@ namespace EShopOnAbp.Customers
         {
             
         }
-        public Vip(string vipId, string customerId)
+        public Vip(string id, string customerId)
         {
-            VipId = vipId;
+            Id = id;
             CustomerId = customerId;
             ScoreRecords = new List<VipScoreRecord>();
         }
@@ -80,7 +87,7 @@ namespace EShopOnAbp.Customers
         private VipScoreRecord AddRecord(VipScoreRecord.RecordTypeEnum recordTypeEnum, int changed)
         {
             var beforeLevel = Level;
-            var newRecord = new VipScoreRecord(VipId, recordTypeEnum, Score, changed);
+            var newRecord = new VipScoreRecord(Id, recordTypeEnum, Score, changed);
             ScoreRecords.Add(newRecord);
             Score = newRecord.After;
             var afterLevel = Level;
@@ -88,11 +95,11 @@ namespace EShopOnAbp.Customers
             //若积分更新前后，等级变更，则添加等级变更事件
             if (beforeLevel != afterLevel)
             {
-                AddDistributedEvent(new VipLevelChangedEto(VipId, beforeLevel, afterLevel));
+                AddDistributedEvent(new VipLevelChangedEto(Id, beforeLevel, afterLevel));
             }
 
             //添加积分变更事件
-            AddDistributedEvent(new VipScoreChangedEvent(VipId, newRecord.Before, newRecord.After));
+            AddDistributedEvent(new VipScoreChangedEvent(Id, newRecord.Before, newRecord.After));
 
             return newRecord;
         }
