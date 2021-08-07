@@ -1,5 +1,6 @@
 ﻿using System;
 using EShopOnAbp.Customers;
+using EShopOnAbp.Vips;
 using Microsoft.EntityFrameworkCore;
 using Volo.Abp.AuditLogging.EntityFrameworkCore;
 using Volo.Abp.BackgroundJobs.EntityFrameworkCore;
