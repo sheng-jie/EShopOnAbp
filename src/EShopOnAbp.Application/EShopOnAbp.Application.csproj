@@ -23,6 +23,7 @@
 
   <ItemGroup>
     <Folder Include="Customers" />
+    <Folder Include="Vips" />
   </ItemGroup>
 
 </Project>
