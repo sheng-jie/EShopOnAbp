@@ -1,6 +1,8 @@
-﻿namespace EShopOnAbp.Customers
+using Volo.Abp.Application.Services;
+
+namespace EShopOnAbp.Customers
 {
-    public interface ICustomersAppService
+    public interface ICustomerAppService : ICrudAppService<CustomerDto, string>
     {
         
     }

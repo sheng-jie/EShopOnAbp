@@ -21,9 +21,4 @@
     <PackageReference Include="Volo.Abp.SettingManagement.Application" Version="4.4.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Customers" />
-    <Folder Include="Vips" />
-  </ItemGroup>
-
 </Project>

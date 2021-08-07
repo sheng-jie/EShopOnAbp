@@ -106,13 +106,13 @@ namespace EShopOnAbp.EntityFrameworkCore
 
             builder.Entity<VipScoreRecord>(t =>
             {
-                t.Property(v => v.VipScoreRecordStatus)
+                t.Property(v => v.RecordStatus)
                     .HasMaxLength(16)
                     .HasConversion(
                         v => v.ToString(),
                         v => (VipScoreRecordStatusEnum) Enum.Parse(typeof(VipScoreRecordStatusEnum), v));
 
-                t.Property(v => v.VipScoreRecordType)
+                t.Property(v => v.RecordType)
                     .HasMaxLength(16)
                     .HasConversion(
                         v => v.ToString(),

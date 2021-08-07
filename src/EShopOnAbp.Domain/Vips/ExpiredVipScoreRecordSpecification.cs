@@ -8,8 +8,8 @@ namespace EShopOnAbp.Vips
     {
         public override Expression<Func<VipScoreRecord, bool>> ToExpression()
         {
-            return record => record.VipScoreRecordType == VipScoreRecordTypeEnum.Add &&
-                             record.VipScoreRecordStatus == VipScoreRecordStatusEnum.Active &&
+            return record => record.RecordType == VipScoreRecordTypeEnum.Add &&
+                             record.RecordStatus == VipScoreRecordStatusEnum.Active &&
                              record.Left > 0 &&
                              record.RecordDate <= DateTime.Now.AddYears(-1);
         }

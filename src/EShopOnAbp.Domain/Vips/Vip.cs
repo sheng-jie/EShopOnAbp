@@ -30,11 +30,11 @@ namespace EShopOnAbp.Vips
 
         private Vip()
         {
-            
+            ScoreRecords = new List<VipScoreRecord>();
         }
-        public Vip(string id, string customerId)
+        public Vip(string vipId, string customerId)
         {
-            Id = id;
+            Id = vipId;
             CustomerId = customerId;
             ScoreRecords = new List<VipScoreRecord>();
         }
@@ -46,7 +46,7 @@ namespace EShopOnAbp.Vips
             {
                 VipLevel.L1 or VipLevel.L2 => score * 2,
                 VipLevel.L3 or VipLevel.L4 => score * 3,
-                _ => Score += score * 1
+                _ => score * 1
             };
 
             AddRecord(VipScoreRecordTypeEnum.Add, needAddedScore);
@@ -98,8 +98,8 @@ namespace EShopOnAbp.Vips
 
             var activeAddedRecords =
                 ScoreRecords.Where(r =>
-                    r.VipScoreRecordStatus == VipScoreRecordStatusEnum.Active &&
-                    r.VipScoreRecordType == VipScoreRecordTypeEnum.Add).OrderBy(r => r.RecordDate);
+                    r.RecordStatus == VipScoreRecordStatusEnum.Active &&
+                    r.RecordType == VipScoreRecordTypeEnum.Add).OrderBy(r => r.RecordDate);
 
             foreach (var scoreRecord in activeAddedRecords)
             {

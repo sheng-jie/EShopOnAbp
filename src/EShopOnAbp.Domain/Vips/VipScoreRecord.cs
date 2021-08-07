@@ -9,9 +9,9 @@ namespace EShopOnAbp.Vips
         
         public string VipId { get; private set; }
 
-        public VipScoreRecordTypeEnum VipScoreRecordType { get; private set; }
+        public VipScoreRecordTypeEnum RecordType { get; private set; }
 
-        public VipScoreRecordStatusEnum VipScoreRecordStatus { get; private set; }
+        public VipScoreRecordStatusEnum RecordStatus { get; private set; }
         public int Before { get; private set; }
         public int Changed { get; private set; }
         public int After { get; private set; }
@@ -25,27 +25,27 @@ namespace EShopOnAbp.Vips
         {
         }
 
-        public VipScoreRecord(string vipId, VipScoreRecordTypeEnum vipScoreRecordType, int before, int changed)
+        public VipScoreRecord(string vipId, VipScoreRecordTypeEnum recordType, int before, int changed)
         {
             VipId = vipId;
             Before = before;
             Changed = changed;
             After = before + changed;
             RecordDate = DateTime.Now;
-            VipScoreRecordType = vipScoreRecordType;
-            switch (vipScoreRecordType)
+            RecordType = recordType;
+            switch (recordType)
             {
                 case VipScoreRecordTypeEnum.Add:
-                    VipScoreRecordStatus = VipScoreRecordStatusEnum.Active;
+                    RecordStatus = VipScoreRecordStatusEnum.Active;
                     Left = changed;
                     break;
                 case VipScoreRecordTypeEnum.Exchange:
                 case VipScoreRecordTypeEnum.Reduce:
-                    VipScoreRecordStatus = VipScoreRecordStatusEnum.Used;
+                    RecordStatus = VipScoreRecordStatusEnum.Used;
                     Left = 0;
                     break;
                 case VipScoreRecordTypeEnum.Expired:
-                    VipScoreRecordStatus = VipScoreRecordStatusEnum.Expired;
+                    RecordStatus = VipScoreRecordStatusEnum.Expired;
                     Left = 0;
                     break;
             }
@@ -56,11 +56,11 @@ namespace EShopOnAbp.Vips
 
         public int SetExpired()
         {
-            if (VipScoreRecordType != VipScoreRecordTypeEnum.Add) return 0;
+            if (RecordType != VipScoreRecordTypeEnum.Add) return 0;
 
             var expiredScore = Left;
             Left = 0;
-            VipScoreRecordStatus = VipScoreRecordStatusEnum.Expired;
+            RecordStatus = VipScoreRecordStatusEnum.Expired;
             LastUpdateDate = DateTime.Now;
 
             return expiredScore;
@@ -70,14 +70,14 @@ namespace EShopOnAbp.Vips
         public int TryReduce(int needScore)
         {
             //要求记录必须处于活动的新增类型记录
-            if (VipScoreRecordType != VipScoreRecordTypeEnum.Add && VipScoreRecordStatus != VipScoreRecordStatusEnum.Active)
+            if (RecordType != VipScoreRecordTypeEnum.Add && RecordStatus != VipScoreRecordStatusEnum.Active)
                 return needScore;
 
             if (Left < needScore) return needScore;
 
             Left -= needScore;
             //如果扣减完毕则标记状态为已使用
-            if (Left == 0) VipScoreRecordStatus = VipScoreRecordStatusEnum.Used;
+            if (Left == 0) RecordStatus = VipScoreRecordStatusEnum.Used;
             LastUpdateDate = DateTime.Now;
             return 0;
         }

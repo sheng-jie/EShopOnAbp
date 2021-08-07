@@ -1,7 +1,6 @@
-﻿using EShopOnAbp.Vips;
-using Volo.Abp.Application.Dtos;
+﻿using Volo.Abp.Application.Dtos;
 
-namespace EShopOnAbp.Customers
+namespace EShopOnAbp.Vips
 {
     public class VipDto : EntityDto<string>
     {
