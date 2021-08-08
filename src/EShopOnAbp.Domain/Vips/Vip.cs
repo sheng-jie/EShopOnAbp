@@ -116,11 +116,15 @@ namespace EShopOnAbp.Vips
             return true;
         }
 
-        // 过期检查
-        public void CheckExpiredRecord()
+        private List<VipScoreRecord> GetExpiredRecords()
         {
-            var expiredRecords =
-                ScoreRecords.Where(r => new ExpiredVipScoreRecordSpecification().IsSatisfiedBy(r)).ToList();
+            return ScoreRecords.Where(r => new ExpiredVipScoreRecordSpecification().IsSatisfiedBy(r)).ToList();
+        }
+
+        // 过期检查
+        public void MarkExpiredRecord()
+        {
+            var expiredRecords = GetExpiredRecords();
 
             if (!expiredRecords.Any()) return;
 

@@ -16,7 +16,7 @@ namespace EShopOnAbp.Vips
         public int Changed { get; private set; }
         public int After { get; private set; }
 
-        public int Left { get; set; }
+        public int Left { get; private set; }
         public DateTime RecordDate { get; private set; }
 
         public DateTime LastUpdateDate { get; private set; }
