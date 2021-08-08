@@ -24,5 +24,17 @@ namespace EShopOnAbp.Vips
 
             return vipIds;
         }
+
+        public async Task<List<VipScoreRecord>> GetVipScoreRecordsAsync(string vipId,
+            ISpecification<VipScoreRecord> specification = null)
+        {
+            var dbContext = await GetDbContextAsync();
+            var records = await dbContext.VipScoreRecords
+                .Where(vsr => vsr.VipId == vipId)
+                .WhereIf(specification != null, specification?.ToExpression())
+                .ToListAsync();
+
+            return records;
+        }
     }
 }

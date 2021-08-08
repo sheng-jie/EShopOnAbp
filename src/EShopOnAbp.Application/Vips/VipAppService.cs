@@ -9,14 +9,12 @@ namespace EShopOnAbp.Vips
 {
     public class VipAppService : EShopOnAbpAppService, IVipAppService
     {
-        private readonly IUnitOfWorkManager _unitOfWorkManager;
         private readonly VipManager _vipManager;
         private readonly IVipRepository _vipRepository;
 
-        public VipAppService(IUnitOfWorkManager unitOfWorkManager, VipManager vipManager,
+        public VipAppService(VipManager vipManager,
             IVipRepository vipRepository)
         {
-            _unitOfWorkManager = unitOfWorkManager;
             _vipManager = vipManager;
             _vipRepository = vipRepository;
         }
@@ -37,7 +35,7 @@ namespace EShopOnAbp.Vips
             var vip = await _vipRepository.FirstOrDefaultAsync(t => t.CustomerId == customerId);
             if (vip == null)
             {
-                using var uow = _unitOfWorkManager.Begin();
+                using var uow = UnitOfWorkManager.Begin();
                 vip = await _vipManager.CreateVipAsync(customerId);
 
                 await uow.CompleteAsync();
@@ -51,6 +49,7 @@ namespace EShopOnAbp.Vips
         [HttpPost]
         public async Task CheckExpiredScoresAsync()
         {
+            //获取包含过期记录的会员ID列表
             var vipIds = await _vipManager.GetHasExpiredRecordVipIdsAsync();
 
             //每100个VIP共享一个独立事务
@@ -59,10 +58,14 @@ namespace EShopOnAbp.Vips
 
             foreach (var ids in splitVipIdArrays)
             {
-                using var uow = _unitOfWorkManager.Begin(requiresNew: true);
-
-                vipIds.ForEach(async vipId => await _vipManager.MarkVipExpiredScoreRecordsAsync(vipId));
-                
+                //每一批次采用独立事务
+                using var uow = UnitOfWorkManager.Begin(requiresNew: true);
+                //遍历调用领域服务进行过期记录标记
+                foreach (var vipId in ids)
+                {
+                    await _vipManager.CleanVipExpiredScoreRecordsAsync(vipId);
+                }
+                //提交事务
                 await uow.CompleteAsync();
             }
         }

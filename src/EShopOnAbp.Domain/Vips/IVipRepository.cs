@@ -10,5 +10,8 @@ namespace EShopOnAbp.Vips
     public interface IVipRepository : IRepository<Vip, string>,IQueryable
     {
         Task<List<string>> GetVipIdsFromRecordsAsync(ISpecification<VipScoreRecord> specification);
+
+        Task<List<VipScoreRecord>> GetVipScoreRecordsAsync(string vipId,
+            ISpecification<VipScoreRecord> specification = null);
     }
 }

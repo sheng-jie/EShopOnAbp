@@ -65,7 +65,7 @@ namespace EShopOnAbp.Vips
             return isMatched;
         }
 
-        private VipScoreRecord AddRecord(VipScoreRecordTypeEnum vipScoreRecordTypeEnum, int changed)
+        public VipScoreRecord AddRecord(VipScoreRecordTypeEnum vipScoreRecordTypeEnum, int changed)
         {
             var beforeLevel = Level;
             var newRecord = new VipScoreRecord(Id, vipScoreRecordTypeEnum, Score, changed);

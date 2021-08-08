@@ -43,5 +43,31 @@ namespace EShopOnAbp.Vips
             var vip = await _vipRepository.FindAsync(vipId, includeDetails: true);
             vip.MarkExpiredRecord();
         }
+
+        //获取会员需要清理的积分记录（即已过期但未标记的记录）
+        public async Task<List<VipScoreRecord>> GetNeedCleanedRecordsAsync(string vipId)
+        {
+           var expiredRecords =await  _vipRepository.GetVipScoreRecordsAsync(vipId, new ExpiredVipScoreRecordSpecification());
+
+           return expiredRecords;
+        }
+        //清理已过期但未标记的积分记录
+        public async Task CleanVipExpiredScoreRecordsAsync(string vipId)
+        {
+            var vip = await _vipRepository.FirstOrDefaultAsync(t => t.Id == vipId);
+
+            var vipExpiredScoreRecords = await GetNeedCleanedRecordsAsync(vipId);
+
+            var expiredScores = 0;
+            foreach (var expiredScoreRecord in vipExpiredScoreRecords)
+            {
+                expiredScores += expiredScoreRecord.Left;
+                expiredScoreRecord.SetExpired();
+            }
+            
+            vip.AddRecord(VipScoreRecordTypeEnum.Expired, -expiredScores);
+            
+            await _vipRepository.UpdateAsync(vip);
+        }
     }
 }
